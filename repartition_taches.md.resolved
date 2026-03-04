@@ -1,0 +1,265 @@
+# 📋 StreamForge — Répartition des Tâches par Membre
+
+> [!IMPORTANT]
+> Chaque membre travaille sur une partie **indépendante** du projet. Les 4 parties sont conçues pour minimiser les conflits Git et permettre un développement en parallèle.
+
+---
+
+## 🏗️ Vue d'ensemble de l'architecture
+
+```mermaid
+flowchart TB
+    subgraph Mohammed["🟣 Mohammed — User Service"]
+        US["👤 User Service\n(:8082)"]
+        UDB[("🗄️ User DB")]
+        US --> UDB
+    end
+
+    subgraph Hajar["🔴 Hajar — Video Service"]
+        VS["🎬 Video Service\n(:8081)"]
+        VDB[("🗄️ Video DB")]
+        VS --> VDB
+    end
+
+    subgraph Abdellah["🟢 Abdellah — Infrastructure"]
+        Discovery["🔍 Discovery Service\n(Eureka :8761)"]
+        Config["⚙️ Config Service\n(:8888)"]
+        GW["🚪 Gateway Service\n(:8090)"]
+        Docker["🐳 Docker Compose"]
+    end
+
+    subgraph Abdelali["🔵 Abdelali — Documentation & Tests"]
+        README["📄 README.md"]
+        CLASS["📐 Class Diagram"]
+        Postman["📬 Postman Collection"]
+        Tests["🧪 Tests Unitaires"]
+    end
+
+    Client["🖥️ Client / Postman"] --> GW
+    GW --> VS
+    GW --> US
+    US -->|"OpenFeign"| VS
+```
+
+---
+
+## 🎬 Membre 1 : Hajar — Video Service (Microservice Métier)
+
+### 📁 Dossier de travail
+```
+video-service/
+```
+
+### 📝 Tâches détaillées
+
+| # | Tâche | Fichiers concernés |
+|---|-------|--------------------|
+| 1 | **Créer l'entité `Video`** avec tous les champs : id, title, description, thumbnailUrl, trailerUrl, duration, releaseYear, type, category, rating, director, cast | `entity/Video.java` |
+| 2 | **Créer les Enums** : VideoType (FILM, SERIE) et VideoCategory (ACTION, COMEDIE, DRAME, etc.) | `entity/VideoType.java`, `entity/VideoCategory.java` |
+| 3 | **Créer les DTOs** : VideoRequestDTO, VideoResponseDTO | `dto/VideoRequestDTO.java`, `dto/VideoResponseDTO.java` |
+| 4 | **Créer le Mapper** : VideoMapper (toEntity, toResponseDTO, updateEntity) | `mapper/VideoMapper.java` |
+| 5 | **Créer le Repository** : VideoRepository avec les méthodes de recherche personnalisées (findByType, findByCategory, searchByTitle, findByDirector, findByMinRating) | `repository/VideoRepository.java` |
+| 6 | **Créer l'interface Service + Implémentation** : logique métier CRUD + recherche/filtrage | `service/VideoService.java`, `service/VideoServiceImpl.java` |
+| 7 | **Créer le Controller** : VideoController avec tous les endpoints REST | `controller/VideoController.java` |
+| 8 | **Gestion des exceptions** : ResourceNotFoundException, GlobalExceptionHandler | `exception/ResourceNotFoundException.java`, `exception/GlobalExceptionHandler.java` |
+| 9 | **Configuration** : application.yml et application-docker.yml | `src/main/resources/application.yml`, [application-docker.yml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/user-service/src/main/resources/application-docker.yml) |
+| 10 | **Classe principale** : VideoServiceApplication.java | [VideoServiceApplication.java](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/video-service/src/main/java/com/streamforge/video/VideoServiceApplication.java) |
+| 11 | **Fichier POM** : dépendances Maven du video-service | [pom.xml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/pom.xml) |
+
+### 📊 Volume estimé
+- **~13 fichiers Java** + 2 fichiers de config + 1 POM
+- **Endpoints REST** : 10 endpoints (CRUD + recherche par type/catégorie/titre/directeur/rating)
+- **Complexité** : ⭐⭐⭐ (moins complexe car pas de communication inter-services)
+
+### 🔗 Dépendance
+- **Aucune dépendance** sur les autres services → peut travailler de façon 100% indépendante
+- Le User Service dépend d'elle (mais Hajar n'a pas besoin de coder ça)
+
+---
+
+## 👤 Membre 2 : Mohammed — User Service (Microservice Métier)
+
+### 📁 Dossier de travail
+```
+user-service/
+```
+
+### 📝 Tâches détaillées
+
+| # | Tâche | Fichiers concernés |
+|---|-------|--------------------|
+| 1 | **Créer l'entité `User`** avec les champs : id, username, email, password | `entity/User.java` |
+| 2 | **Créer l'entité `Watchlist`** avec les champs : id, userId, videoId, addedAt | `entity/Watchlist.java` |
+| 3 | **Créer l'entité `WatchHistory`** avec les champs : id, userId, videoId, watchedAt, progressTime, completed | `entity/WatchHistory.java` |
+| 4 | **Créer les DTOs** : UserRequestDTO, UserResponseDTO, UserStatsDTO, VideoDTO, WatchHistoryRequestDTO, WatchHistoryResponseDTO, WatchlistResponseDTO | `dto/*.java` (7 fichiers) |
+| 5 | **Créer le Mapper** : conversion Entity ↔ DTO | `mapper/UserMapper.java` |
+| 6 | **Créer les Repositories** : UserRepository, WatchlistRepository, WatchHistoryRepository | `repository/*.java` (3 fichiers) |
+| 7 | **Créer l'interface Service + Implémentation** : toute la logique métier (CRUD User, Watchlist, WatchHistory, Stats) | `service/UserService.java`, `service/UserServiceImpl.java` |
+| 8 | **Créer les Controllers** : UserController, WatchlistController, WatchHistoryController | `controller/*.java` (3 fichiers) |
+| 9 | **Créer le client Feign** : VideoClient + VideoClientFallback (pour communiquer avec Video Service) | `client/VideoClient.java`, `client/VideoClientFallback.java` |
+| 10 | **Gestion des exceptions** : ResourceNotFoundException, ResourceAlreadyExistsException, GlobalExceptionHandler | `exception/*.java` (3 fichiers) |
+| 11 | **Configuration** : application.yml et application-docker.yml | `src/main/resources/application.yml`, [application-docker.yml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/user-service/src/main/resources/application-docker.yml) |
+| 12 | **Classe principale** : UserServiceApplication.java | [UserServiceApplication.java](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/user-service/src/main/java/com/streamforge/user/UserServiceApplication.java) |
+| 13 | **Fichier POM** : dépendances Maven du user-service | [pom.xml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/pom.xml) |
+
+### 📊 Volume estimé
+- **~25 fichiers Java** + 2 fichiers de config + 1 POM
+- **Endpoints REST** : 11 endpoints (CRUD User + Watchlist + History + Stats)
+- **Complexité** : ⭐⭐⭐⭐ (la plus complexe car inclut la communication inter-services avec OpenFeign)
+
+### 🔗 Dépendance
+- Dépend du **Video Service** (Hajar) via OpenFeign pour récupérer les détails des vidéos
+- Peut commencer son développement **immédiatement** en utilisant le Fallback du client Feign
+
+---
+
+## ⚙️ Membre 3 : Abdellah — Infrastructure & Services Transversaux
+
+### 📁 Dossiers de travail
+```
+discovery-service/
+config-service/
+gateway-service/
+docker-compose.yml
+pom.xml (parent)
+setup-config-repo.bat
+```
+
+### 📝 Tâches détaillées
+
+| # | Tâche | Fichiers concernés |
+|---|-------|--------------------|
+| **Discovery Service (Eureka)** | | |
+| 1 | **Créer le Discovery Service** : serveur Eureka pour l'enregistrement et la découverte des services | `discovery-service/src/.../DiscoveryServiceApplication.java` |
+| 2 | **Configuration Eureka** : application.yml (port 8761, dashboard) | [discovery-service/src/main/resources/application.yml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/discovery-service/src/main/resources/application.yml) |
+| 3 | **POM Discovery** : dépendances (spring-cloud-starter-netflix-eureka-server) | [discovery-service/pom.xml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/discovery-service/pom.xml) |
+| 4 | **Dockerfile Discovery** | [discovery-service/Dockerfile](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/discovery-service/Dockerfile) |
+| **Config Service** | | |
+| 5 | **Créer le Config Service** : serveur de configuration centralisée (Git-backed) | `config-service/src/.../ConfigServiceApplication.java` |
+| 6 | **Configuration Config Server** : application.yml (port 8888, lien vers Git repo) | [config-service/src/main/resources/application.yml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/config-service/src/main/resources/application.yml) |
+| 7 | **POM Config** : dépendances (spring-cloud-config-server) | [config-service/pom.xml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/config-service/pom.xml) |
+| 8 | **Dockerfile Config** | [config-service/Dockerfile](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/config-service/Dockerfile) |
+| 9 | **Script setup config repo** : setup-config-repo.bat pour initialiser le repo Git local | [setup-config-repo.bat](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/setup-config-repo.bat) |
+| **Gateway Service** | | |
+| 10 | **Créer le Gateway Service** : API Gateway (Spring Cloud Gateway) | `gateway-service/src/.../GatewayServiceApplication.java` |
+| 11 | **Configuration Gateway** : routes vers video-service et user-service | [gateway-service/src/main/resources/application.yml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/gateway-service/src/main/resources/application.yml) |
+| 12 | **POM Gateway** : dépendances (spring-cloud-starter-gateway) | [gateway-service/pom.xml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/gateway-service/pom.xml) |
+| 13 | **Dockerfile Gateway** | [gateway-service/Dockerfile](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/gateway-service/Dockerfile) |
+| **Docker & Parent POM** | | |
+| 14 | **Docker Compose** : orchestration de tous les services (2 MySQL, 5 services Spring) | [docker-compose.yml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/docker-compose.yml) |
+| 15 | **POM Parent** : définir les modules, versions Spring Boot et Spring Cloud | [pom.xml](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/pom.xml) (racine) |
+
+### 📊 Volume estimé
+- **3 classes Java** (une par service) + 3 application.yml + 3 Dockerfiles + 3 POM
+- **docker-compose.yml** complet avec healthchecks et networks
+- **Complexité** : ⭐⭐⭐ (configuration Spring Cloud, pas de logique métier complexe)
+
+### 🔗 Dépendance
+- **Aucune dépendance** sur le code métier → peut travailler de façon indépendante
+- Doit juste connaître les **noms des services** (VIDEO-SERVICE, USER-SERVICE) et les **ports** (8081, 8082) pour le routing
+
+---
+
+## 📚 Membre 4 : Abdelali — Tests Unitaires & Documentation
+
+### 📁 Dossiers de travail
+```
+user-service/src/test/
+video-service/src/test/
+README.md
+CLASS_DIAGRAM.md
+StreamForge.postman_collection.json
+.gitignore
+```
+
+### 📝 Tâches détaillées
+
+| # | Tâche | Fichiers concernés |
+|---|-------|--------------------|
+| **Tests Unitaires — Video Service** | | |
+| 1 | **Tests VideoServiceImpl** : tester toute la logique métier du service vidéo (CRUD + recherche) avec Mockito | `video-service/src/test/.../service/VideoServiceImplTest.java` |
+| 2 | **Tests VideoController** : tester les endpoints REST avec MockMvc | `video-service/src/test/.../controller/VideoControllerTest.java` |
+| 3 | **Tests VideoMapper** : tester les conversions Entity ↔ DTO | `video-service/src/test/.../mapper/VideoMapperTest.java` |
+| **Tests Unitaires — User Service** | | |
+| 4 | **Tests UserServiceImpl** : tester la logique métier (CRUD User, Watchlist, History, Stats) avec mock du VideoClient | `user-service/src/test/.../service/UserServiceImplTest.java` |
+| **Documentation** | | |
+| 5 | **README.md** : documentation complète du projet (architecture, endpoints, getting started, samples, badges) | [README.md](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/README.md) |
+| 6 | **CLASS_DIAGRAM.md** : diagrammes de classe Mermaid (complet + simplifié + architecture) | [CLASS_DIAGRAM.md](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/CLASS_DIAGRAM.md) |
+| 7 | **Collection Postman** : 33 requêtes pré-configurées pour tester tous les endpoints | [StreamForge.postman_collection.json](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/StreamForge.postman_collection.json) |
+| 8 | **Fichier .gitignore** : ignorer les fichiers build, IDE, etc. | [.gitignore](file:///c:/Users/whhaj/IdeaProjects/StreamForge-ModernMicroservicesStreaming/.gitignore) |
+
+### 📊 Volume estimé
+- **4 fichiers de tests** (34 tests au total : 23 pour video-service, 11 pour user-service)
+- **3 fichiers de documentation** (README, Class Diagram, Postman)
+- **Complexité** : ⭐⭐⭐ (nécessite une bonne compréhension de JUnit 5, Mockito, et MockMvc)
+
+### 🔗 Dépendance
+- Doit **attendre** que Mohammed et Hajar aient une version stable de leurs services pour écrire les tests
+- Peut commencer la documentation (README, diagrammes) en **parallèle**
+- Peut écrire les **squelettes de tests** avant que le code soit finalisé
+
+---
+
+## 📅 Planning de développement recommandé
+
+```mermaid
+gantt
+    title Planning StreamForge
+    dateFormat  YYYY-MM-DD
+    
+    section Abdellah (Infra)
+    POM Parent & Discovery     :a1, 2026-03-04, 2d
+    Config Service             :a2, after a1, 1d
+    Gateway Service            :a3, after a2, 1d
+    Docker Compose             :a4, after a3, 2d
+    
+    section Hajar (Video)
+    Entity & Enums             :m1, 2026-03-04, 1d
+    DTOs & Mapper              :m2, after m1, 1d
+    Repository & Service       :m3, after m2, 2d
+    Controller & Exceptions    :m4, after m3, 1d
+    Configuration              :m5, after m4, 1d
+    
+    section Mohammed (User)
+    Entities                   :h1, 2026-03-04, 1d
+    DTOs & Mapper              :h2, after h1, 1d
+    Repositories               :h3, after h2, 1d
+    Service (CRUD User)        :h4, after h3, 2d
+    Feign Client               :h5, after h4, 1d
+    Controllers & Exceptions   :h6, after h5, 2d
+    
+    section Abdelali (Tests & Doc)
+    README & Class Diagram     :d1, 2026-03-04, 3d
+    Postman Collection         :d2, after d1, 2d
+    Tests Video Service        :d3, after d2, 2d
+    Tests User Service         :d4, after d3, 2d
+```
+
+---
+
+## ⚠️ Points de coordination importants
+
+> [!WARNING]
+> Ces points nécessitent une communication entre les membres de l'équipe :
+
+| Point | Membres concernés | Détail |
+|-------|-------------------|--------|
+| **Noms des services** | Abdellah ↔ Tout le monde | Les noms enregistrés dans Eureka (`VIDEO-SERVICE`, `USER-SERVICE`) doivent être les mêmes partout |
+| **Ports des services** | Abdellah ↔ Tout le monde | Video: 8081, User: 8082, Gateway: 8090, Eureka: 8761, Config: 8888 |
+| **API du Video Service** | Hajar ↔ Mohammed | Mohammed a besoin de connaître l'endpoint `GET /api/videos/{id}` pour son client Feign |
+| **Structure des DTOs** | Hajar ↔ Abdelali | Abdelali a besoin de connaître les DTOs pour écrire les tests et la collection Postman |
+| **Merge final** | Tout le monde | Après que chacun ait terminé sa partie, faire un merge final et tester l'intégration |
+
+---
+
+## 📊 Résumé de la répartition
+
+| Membre | Partie | Fichiers | Complexité | Indépendance |
+|--------|--------|----------|------------|--------------|
+| **Hajar** | Video Service (microservice métier) | ~16 fichiers | ⭐⭐⭐ | 100% indépendante |
+| **Mohammed** | User Service (microservice métier) | ~28 fichiers | ⭐⭐⭐⭐ | Haute (Feign Fallback) |
+| **Abdellah** | Infrastructure (Discovery, Config, Gateway, Docker) | ~15 fichiers | ⭐⭐⭐ | 100% indépendant |
+| **Abdelali** | Tests unitaires + Documentation | ~8 fichiers | ⭐⭐⭐ | Partielle (attend les services) |
+
+> [!TIP]
+> **Chaque membre travaille dans des dossiers séparés**, ce qui évite les conflits Git. Le seul point de synchronisation est le **merge final** pour tester l'intégration complète.

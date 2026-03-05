@@ -9,7 +9,6 @@ import java.util.UUID;
  * Service interface for User business logic.
  */
 public interface UserService {
-
     // User CRUD
     UserResponseDTO createUser(UserRequestDTO requestDTO);
     UserResponseDTO getUserById(UUID id);

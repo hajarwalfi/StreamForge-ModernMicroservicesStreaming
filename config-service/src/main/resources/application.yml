@@ -4,13 +4,13 @@ server:
 spring:
   application:
     name: config-service
+  profiles:
+    active: native
   cloud:
     config:
       server:
-        git:
-          uri: ${CONFIG_GIT_URI:file:///${user.home}/streamforge-config-repo}
-          default-label: main
-          clone-on-start: true
+        native:
+          search-locations: classpath:/configurations/
 
 eureka:
   client:

@@ -1,0 +1,19 @@
+server:
+  port: 8090
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: video-service
+          uri: lb://video-service
+          predicates:
+            - Path=/api/videos/**
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**, /api/watchlist/**, /api/history/**

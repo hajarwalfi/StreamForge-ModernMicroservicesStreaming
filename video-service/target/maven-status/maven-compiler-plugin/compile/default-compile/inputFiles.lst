@@ -1,0 +1,13 @@
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\mapper\VideoMapper.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\entity\Video.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\VideoServiceApplication.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\exception\GlobalExceptionHandler.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\service\VideoServiceImpl.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\service\VideoService.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\dto\VideoRequestDTO.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\entity\VideoType.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\entity\VideoCategory.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\repository\VideoRepository.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\controller\VideoController.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\dto\VideoResponseDTO.java
+c:\Users\whhaj\IdeaProjects\StreamForge-ModernMicroservicesStreaming\video-service\src\main\java\com\streamforge\video\exception\ResourceNotFoundException.java

@@ -1,0 +1,3 @@
+com\streamforge\video\controller\VideoControllerTest.class
+com\streamforge\video\mapper\VideoMapperTest.class
+com\streamforge\video\service\VideoServiceImplTest.class

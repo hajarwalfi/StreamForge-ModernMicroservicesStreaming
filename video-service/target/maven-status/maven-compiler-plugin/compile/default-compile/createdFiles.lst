@@ -1,0 +1,16 @@
+com\streamforge\video\dto\VideoResponseDTO.class
+com\streamforge\video\repository\VideoRepository.class
+com\streamforge\video\exception\ResourceNotFoundException.class
+com\streamforge\video\entity\VideoType.class
+com\streamforge\video\entity\Video$VideoBuilder.class
+com\streamforge\video\entity\Video.class
+com\streamforge\video\dto\VideoResponseDTO$VideoResponseDTOBuilder.class
+com\streamforge\video\controller\VideoController.class
+com\streamforge\video\dto\VideoRequestDTO.class
+com\streamforge\video\entity\VideoCategory.class
+com\streamforge\video\VideoServiceApplication.class
+com\streamforge\video\dto\VideoRequestDTO$VideoRequestDTOBuilder.class
+com\streamforge\video\service\VideoService.class
+com\streamforge\video\service\VideoServiceImpl.class
+com\streamforge\video\mapper\VideoMapper.class
+com\streamforge\video\exception\GlobalExceptionHandler.class
